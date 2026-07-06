@@ -10,6 +10,7 @@ provider:
 
 plugins:
   - serverless-python-requirements
+  - serverless-offline
 
 custom:
   pythonRequirements:
@@ -24,7 +25,7 @@ functions:
     events:
       # Crear una compañía
       - http:
-          path: /companies/
+          path: /companies
           method: post
           cors: true
       # Obtener una compañía específica
