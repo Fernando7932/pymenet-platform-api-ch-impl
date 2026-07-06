@@ -17,16 +17,18 @@ custom:
     layer: true
 
 functions:
-  api:
-    handler: main.handler
+  companyContext:
+    handler: src.DummieContext.app.handler
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
+      # Crear una compañía
       - http:
-          path: /
-          method: ANY
+          path: /companies/
+          method: post
           cors: true
+      # Obtener una compañía específica
       - http:
-          path: /{proxy+}
-          method: ANY
+          path: /companies/{company_id}
+          method: get
           cors: true
