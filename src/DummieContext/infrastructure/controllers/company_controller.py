@@ -9,6 +9,8 @@ class CreateCompanyRequest(BaseModel):
     name: str
     tax_id: str
 
+
+# Si
 @router.post("/", status_code=201)
 def create_company(request: CreateCompanyRequest):
     company = company_service.create_company(name=request.name, tax_id=request.tax_id)
