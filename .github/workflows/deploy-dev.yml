@@ -1,9 +1,7 @@
-name: Deploy API to AWS
+name: Deploy API Service to DEV
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
