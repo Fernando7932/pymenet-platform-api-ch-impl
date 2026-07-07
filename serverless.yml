@@ -6,7 +6,7 @@ provider:
   region: us-east-1
   stage: ${opt:stage, 'dev'}
   timeout: 60
-  memorySize: 512
+  memorySize: 1024
   environment:
     STAGE: ${self:provider.stage}
     GCP_SA: ${ssm:/pymenet/${self:provider.stage}/GCP_SA, env:GCP_SA, ''}
