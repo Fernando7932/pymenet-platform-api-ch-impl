@@ -7,10 +7,10 @@ provider:
   stage: ${opt:stage, 'dev'}
   environment:
     STAGE: ${self:provider.stage}
-    GCP_SA: ${ssm:/pymenet/${self:provider.stage}/GCP_SA~true, env:GCP_SA}
-    GCP_BUCKET_NAME: ${ssm:/pymenet/${self:provider.stage}/GCP_BUCKET_NAME, env:GCP_BUCKET_NAME}
-    AGENT_URL: ${ssm:/pymenet/${self:provider.stage}/AGENT_URL, env:AGENT_URL}
-    AGENT_NAME: ${ssm:/pymenet/${self:provider.stage}/AGENT_NAME, env:AGENT_NAME}
+    GCP_SA: ${ssm:/pymenet/${self:provider.stage}/GCP_SA~true, ${env:GCP_SA, ''}}
+    GCP_BUCKET_NAME: ${ssm:/pymenet/${self:provider.stage}/GCP_BUCKET_NAME, ${env:GCP_BUCKET_NAME, ''}}
+    AGENT_URL: ${ssm:/pymenet/${self:provider.stage}/AGENT_URL, ${env:AGENT_URL, ''}}
+    AGENT_NAME: ${ssm:/pymenet/${self:provider.stage}/AGENT_NAME, ${env:AGENT_NAME, ''}}
 
 plugins:
   - serverless-python-requirements
