@@ -5,6 +5,8 @@ provider:
   runtime: python3.10
   region: us-east-1
   stage: ${opt:stage, 'dev'}
+  timeout: 60
+  memorySize: 512
   environment:
     STAGE: ${self:provider.stage}
     GCP_SA: ${ssm:/pymenet/${self:provider.stage}/GCP_SA, env:GCP_SA, ''}
