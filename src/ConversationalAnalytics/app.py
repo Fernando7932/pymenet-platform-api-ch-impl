@@ -1,4 +1,4 @@
-from aws_lambda_powertools.event_handler import APIGatewayRestResolver
+from aws_lambda_powertools.event_handler import APIGatewayRestResolver, CORSConfig
 from src.ConversationalAnalytics.infrastructure.controllers.send_controller import router as send_router
 import os
 from dotenv import load_dotenv
@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 # Este Resolver pertenece SOLO al contexto de ConversationalAnalytics
-app = APIGatewayRestResolver()
+cors_config = CORSConfig(allow_origin="*", max_age=300)
+app = APIGatewayRestResolver(cors=cors_config)
 
 # Registramos el router del contexto
 app.include_router(send_router)
