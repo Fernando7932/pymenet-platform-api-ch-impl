@@ -13,6 +13,18 @@ provider:
     GCP_BUCKET_NAME: ${ssm:/pymenet/${self:provider.stage}/GCP_BUCKET_NAME, env:GCP_BUCKET_NAME, ''}
     AGENT_URL: ${ssm:/pymenet/${self:provider.stage}/AGENT_URL, env:AGENT_URL, ''}
     AGENT_NAME: ${ssm:/pymenet/${self:provider.stage}/AGENT_NAME, env:AGENT_NAME, ''}
+    JWT_SECRET: ${ssm:/pymenet/${self:provider.stage}/JWT_SECRET, env:JWT_SECRET, ''}
+    USERS_TABLE_NAME: pymenet-users-${self:provider.stage}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:Query
+          Resource:
+            - !GetAtt UsersTable.Arn
 
 plugins:
   - serverless-python-requirements
@@ -43,3 +55,31 @@ functions:
           path: /conversational/ask
           method: post
           cors: true
+
+  iamContext:
+    handler: src.IamContext.app.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /auth/login
+          method: post
+          cors: true
+      - http:
+          path: /auth/register
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: pymenet-users-${self:provider.stage}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
