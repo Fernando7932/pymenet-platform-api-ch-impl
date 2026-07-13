@@ -1,5 +1,5 @@
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver, CORSConfig
-from src.IamContext.infrastructure.controllers.auth_controller import router as auth_router
+from src.IamContext.interfaces.rest.auth_controller import router as auth_router
 from dotenv import load_dotenv
 
 # Cargar variables de entorno (para pruebas locales)

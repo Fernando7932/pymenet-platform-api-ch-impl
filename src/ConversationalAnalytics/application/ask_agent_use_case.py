@@ -1,7 +1,8 @@
 from src.ConversationalAnalytics.domain.value_objects import AnalyticContext, AgentInterface
 
 class AskAgentUseCase:
-    # Inversión de dependencias: Inyectamos la interfaz, no la implementación HTTP
+    # Inyección de dependencias
+
     def __init__(self, agent_client: AgentInterface):
         self.agent_client = agent_client
 

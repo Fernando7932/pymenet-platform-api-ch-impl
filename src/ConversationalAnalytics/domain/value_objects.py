@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 
+# Excepciones
 class EmptyQueryError(Exception):
     pass
 
+# Domain Objects
 class AnalyticContext:
     def __init__(self, user_query: str, file_uri: str, file_description: str):
         self._validate(user_query, file_uri)
@@ -30,7 +32,7 @@ class AnalyticContext:
         if not file_uri.startswith("gs://"):
             raise ValueError("La URI del archivo debe ser un formato válido de Google Storage (gs://).")
 
-# EL CONTRATO (El "Qué" necesita el dominio)
+# Interface (What Domain Needs)
 class AgentInterface(ABC):
     @abstractmethod
     def ask(self, context: AnalyticContext) -> dict:

@@ -22,7 +22,7 @@ def verify_jwt_token(event: dict) -> dict:
     # Formato esperado: "Bearer eyJhbG..."
     parts = auth_header.split(' ')
     if len(parts) != 2 or parts[0] != 'Bearer':
-        raise PermissionError("Formato de token inválido. Use: Bearer <token>")
+        raise PermissionError("Formato de token inválido.")
 
     token = parts[1]
     secret = os.getenv('JWT_SECRET')
