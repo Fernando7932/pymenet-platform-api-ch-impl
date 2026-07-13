@@ -1,9 +1,7 @@
-name: Deploy API to AWS
+name: Deploy API Service to DEV
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -25,10 +23,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "24"
 
       - name: Install Serverless Framework
-        run: npm install -g serverless
+        run: npm install -g serverless@3
 
       - name: Install Serverless Plugins
         run: serverless plugin install -n serverless-python-requirements
