@@ -1,4 +1,4 @@
-from src.WorkspaceManagment.domain.value_objects import AnalyticFile, StorageInterface
+from src.WorkspaceManagment.domain.value_objects import File, StorageInterface
 from google.cloud import storage
 import os
 import json
@@ -15,7 +15,7 @@ class GCPStorageClient(StorageInterface):
         self.client = storage.Client(credentials=credentials)
         self.bucket_name = os.getenv('GCP_BUCKET_NAME')
 
-    def upload(self, file: AnalyticFile) -> str:
+    def upload(self, file: File) -> str:
         bucket = self.client.bucket(self.bucket_name)
 
         blob = bucket.blob(file.filename)

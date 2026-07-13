@@ -1,5 +1,5 @@
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver, CORSConfig
-from src.ConversationalAnalytics.infrastructure.controllers.send_controller import router as send_router
+from src.ConversationalAnalytics.interfaces.rest.send_controller import router as send_router
 import os
 from dotenv import load_dotenv
 

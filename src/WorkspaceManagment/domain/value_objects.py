@@ -8,7 +8,7 @@ class FileSizeExceededError(Exception):
     pass
 
 
-class AnalyticFile:
+class File:
     ALLOWED_EXTENSIONS = {'.csv', '.xlsx', '.xls'}
     FILE_SIZE = 10 * 1024 * 1024 # 10 mb
 
@@ -50,5 +50,5 @@ class AnalyticFile:
 class StorageInterface(ABC):
 
     @abstractmethod
-    def upload(self, file: AnalyticFile) -> str:
+    def upload(self, file: File) -> str:
         pass

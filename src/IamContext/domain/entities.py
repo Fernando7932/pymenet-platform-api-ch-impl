@@ -19,8 +19,6 @@ class Usuario:
         self._credenciales = credenciales
         self._estado = estado
 
-    # ========== GETTERS (Properties) ==========
-
     @property
     def id(self) -> UsuarioId:
         return self._id
@@ -41,7 +39,6 @@ class Usuario:
     def estado(self) -> EstadoUsuario:
         return self._estado
 
-    # ========== LÓGICA DE NEGOCIO ==========
 
     def iniciar_sesion(self, plain_password: str) -> bool:
         """
@@ -59,7 +56,6 @@ class Usuario:
 
         return True
 
-    # ========== FACTORY METHOD (Para registro) ==========
 
     @staticmethod
     def registrar(id_value: str, nombre: str, email_str: str, plain_password: str) -> 'Usuario':
