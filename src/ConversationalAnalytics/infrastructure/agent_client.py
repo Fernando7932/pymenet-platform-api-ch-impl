@@ -32,11 +32,11 @@ class AgentClient(AgentInterface):
     def ask(self, context: AnalyticContext) -> dict:
         url = f"{self._cloud_run_url}/run"
 
-        prompt = (
-            f"fileDescription: '{context.file_description}', "
-            f"fileUri: '{context.file_uri}', "
-            f"userQuery: '{context.user_query}'"
-        )
+        prompt = f"""
+        userQuery: {context.user_query}
+        fileUri: {context.file_uri}
+        fileDescription: {context.file_description}
+        """
 
         payload = {
             "app_name": f"{os.getenv('AGENT_NAME')}",
@@ -58,35 +58,22 @@ class AgentClient(AgentInterface):
 
         response = requests.post(url, data=json.dumps(payload), headers=headers)
 
-        if not response.ok:
-            raise ValueError(
-                f"Error del agente [{response.status_code}]: {response.text[:500]}"
-            )
-
+        response.raise_for_status()
         raw_data = response.json()
 
         # Extraer solo la respuesta final del agente
         final_answer = "No se pudo obtener una respuesta del agente."
 
         # Recorremos la lista de atrás hacia adelante para encontrar el último texto generado
-
         if isinstance(raw_data, list):
             for step in reversed(raw_data):
-                # Asegurarnos de que el turno fue generado por el modelo (no por el usuario/sistema)
-                if step.get("content", {}).get("role") == "model":
-                    parts = step["content"].get("parts", [])
-
-                    # Detectar si este turno contiene una acción (herramienta o código)
-                    has_action = any(
-                        "functionCall" in part or "executableCode" in part
-                        for part in parts
-                    )
-                    if not has_action:
-                        texts = [part["text"] for part in parts if "text" in part]
-
-                        if texts:
-                            final_answer = "\n".join(texts).strip()
+                if "content" in step and "parts" in step["content"]:
+                    for part in step["content"]["parts"]:
+                        if "text" in part:
+                            final_answer = part["text"]
                             break
+                if final_answer != "No se pudo obtener una respuesta del agente.":
+                    break
 
         return {
             "answer": final_answer
