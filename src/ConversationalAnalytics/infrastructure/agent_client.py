@@ -32,17 +32,18 @@ class AgentClient(AgentInterface):
     def ask(self, context: AnalyticContext) -> dict:
         url = f"{self._cloud_run_url}/run"
 
-        prompt = f"""
-        userQuery: {context.user_query}
-        fileUri: {context.file_uri}
-        fileDescription: {context.file_description}
-        """
+        prompt = (
+            f"{context.user_query} "
+            f"El archivo a analizar se encuentra en: {context.file_uri}. "
+            f"Descripción del archivo: {context.file_description}."
+        )
 
         payload = {
             "app_name": f"{os.getenv('AGENT_NAME')}",
             "user_id": f"{uuid.uuid4()}",
             "session_id": f"{uuid.uuid4()}",
             "new_message": {
+                "role": "user",
                 "parts": [
                     {
                         "text": prompt
@@ -58,7 +59,11 @@ class AgentClient(AgentInterface):
 
         response = requests.post(url, data=json.dumps(payload), headers=headers)
 
-        response.raise_for_status()
+        if not response.ok:
+            raise ValueError(
+                f"Error del agente [{response.status_code}]: {response.text[:500]}"
+            )
+
         raw_data = response.json()
 
         # Extraer solo la respuesta final del agente
