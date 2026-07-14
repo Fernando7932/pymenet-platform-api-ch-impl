@@ -33,9 +33,9 @@ class AgentClient(AgentInterface):
         url = f"{self._cloud_run_url}/run"
 
         prompt = (
-            f"{context.user_query} "
-            f"El archivo a analizar se encuentra en: {context.file_uri}. "
-            f"Descripción del archivo: {context.file_description}."
+            f"fileDescription: '{context.file_description}', "
+            f"fileUri: '{context.file_uri}', "
+            f"userQuery: '{context.user_query}'"
         )
 
         payload = {
@@ -43,7 +43,6 @@ class AgentClient(AgentInterface):
             "user_id": f"{uuid.uuid4()}",
             "session_id": f"{uuid.uuid4()}",
             "new_message": {
-                "role": "user",
                 "parts": [
                     {
                         "text": prompt
