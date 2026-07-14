@@ -65,15 +65,24 @@ class AgentClient(AgentInterface):
         final_answer = "No se pudo obtener una respuesta del agente."
 
         # Recorremos la lista de atrás hacia adelante para encontrar el último texto generado
+
         if isinstance(raw_data, list):
             for step in reversed(raw_data):
-                if "content" in step and "parts" in step["content"]:
-                    for part in step["content"]["parts"]:
-                        if "text" in part:
-                            final_answer = part["text"]
+                # Asegurarnos de que el turno fue generado por el modelo (no por el usuario/sistema)
+                if step.get("content", {}).get("role") == "model":
+                    parts = step["content"].get("parts", [])
+
+                    # Detectar si este turno contiene una acción (herramienta o código)
+                    has_action = any(
+                        "functionCall" in part or "executableCode" in part
+                        for part in parts
+                    )
+                    if not has_action:
+                        texts = [part["text"] for part in parts if "text" in part]
+
+                        if texts:
+                            final_answer = "\n".join(texts).strip()
                             break
-                if final_answer != "No se pudo obtener una respuesta del agente.":
-                    break
 
         return {
             "answer": final_answer
