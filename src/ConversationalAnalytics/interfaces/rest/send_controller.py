@@ -19,11 +19,14 @@ class SendRequest(BaseModel):
 @router.post("/conversational/ask")
 def ask_agent():
     """Consultar al agente de IA (Ruta protegida)"""
-    # Verificación JWT — si falla, retorna inmediatamente
+    # Verificación JWT — captura cualquier excepción inesperada
     try:
         verify_jwt_token(router.current_event.raw_event)
     except PermissionError as e:
         return {"statusCode": 401, "message": str(e)}
+    except Exception as e:
+        logger.error(f"Error inesperado en auth: {e}")
+        return {"statusCode": 500, "message": f"Error de autenticación: {str(e)}"}
 
     # Parseo del body
     try:
